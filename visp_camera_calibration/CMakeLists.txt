@@ -4,6 +4,7 @@ project(visp_camera_calibration)
 find_package(ament_cmake_ros REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(camera_calibration_parsers REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
@@ -21,8 +22,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra)
 endif()
 
-add_subdirectory(src)
-
 
 # messages and services interface generation
 rosidl_generate_interfaces(${PROJECT_NAME}
@@ -33,9 +32,20 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/Calibrate.srv"
   DEPENDENCIES std_msgs sensor_msgs geometry_msgs
  )
+ 
+rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} "rosidl_typesupport_cpp")
+
+get_cmake_property(_variableNames VARIABLES)
+list (SORT _variableNames)
+foreach (_variableName ${_variableNames})
+    message(STATUS "${_variableName}=${${_variableName}}")
+endforeach()
+
+# include sub directories
+add_subdirectory(src)
+ 
 # TESTS
 ament_export_dependencies(rosidl_default_runtime)
-#ament_export_interfaces(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 
  
 # END TESTS
@@ -47,6 +57,8 @@ ament_export_dependencies(rosidl_default_runtime)
 #set(visp_camera_calibration_lib_dir "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
 
 # Mark cpp header files for installation
-install(DIRECTORY include DESTINATION include/${PROJECT_NAME})
+install(DIRECTORY include DESTINATION .)
+
+ament_export_include_directories(include)
 
 ament_package()
