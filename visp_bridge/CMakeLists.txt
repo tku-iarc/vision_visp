@@ -29,7 +29,7 @@ set(visp_bridge_lib_dir "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
 #include_directories(include ${VISP_INCLUDE_DIRS})
 
 # Mark cpp header files for installation
-install(DIRECTORY include DESTINATION include/${PROJECT_NAME})
+install(DIRECTORY include DESTINATION .)
 
 install(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION bin
