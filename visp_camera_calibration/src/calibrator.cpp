@@ -93,7 +93,7 @@ namespace visp_camera_calibration
 
   }
 
-  bool Calibrator::calibrateCallback(visp_camera_calibration::calibrate::Request  &req, visp_camera_calibration::calibrate::Response &res){
+  bool Calibrator::calibrateCallback(visp_camera_calibration::calibrate::request  &req, visp_camera_calibration::calibrate::Response &res){
     std::vector<double> dev;
     std::vector<double> dev_dist;
     double lambda = .5;
@@ -126,11 +126,11 @@ namespace visp_camera_calibration
     switch(req.method){
       case vpCalibration::CALIB_LAGRANGE_VIRTUAL_VS:
       case vpCalibration::CALIB_VIRTUAL_VS:
-        res.stdDevErrs = dev;
+        res.std_dev_errs = dev;
         break;
       case vpCalibration::CALIB_LAGRANGE_VIRTUAL_VS_DIST:
       case vpCalibration::CALIB_VIRTUAL_VS_DIST:
-        res.stdDevErrs= dev_dist;
+        res.std_dev_errs= dev_dist;
         break;
     }
 

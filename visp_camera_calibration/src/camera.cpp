@@ -142,7 +142,7 @@ void Camera::sendVideo(){
       ROS_INFO("service called successfully");
 
       ROS_INFO("standard deviation with distorsion:");
-      for(std::vector<double>::iterator i = calibrate_comm.response.stdDevErrs.begin();i!=calibrate_comm.response.stdDevErrs.end();i++)
+      for(std::vector<double>::iterator i = calibrate_comm.response.std_dev_errs.begin();i!=calibrate_comm.response.std_dev_errs.end();i++)
         ROS_INFO("%f",*i);
   }else{
     ROS_ERROR("Failed to call service");

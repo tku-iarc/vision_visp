@@ -48,7 +48,7 @@
 */
 
 #include "names.h"
-#include "ros/ros.h"
+#include <rclcpp/rclcpp.hpp>
 
 namespace visp_camera_calibration
 {
@@ -73,13 +73,13 @@ namespace visp_camera_calibration
   std::string selected_points_z_param("/visp_camera_calibration/visp_camera_calibration_image_processing/selected_points_z");
 
   std::string calibration_path_param("/visp_camera_calibration/visp_camera_calibration_image_processing/calibration_path");
-
+  //FIXME : To be check
   void remap(){
-    if (ros::names::remap("camera_prefix") != "camera_prefix") {
-      camera_prefix = ros::names::remap("camera_prefix");
+/*    if (rclcpp::resolve_topic_name("camera_prefix") != "camera_prefix") {
+      camera_prefix = rclcpp::resolve_topic_name("camera_prefix");
       raw_image_topic = camera_prefix + "/image_raw";
       set_camera_info_service = camera_prefix + "/set_camera_info";
-    }
+    } */
   }
 }
 
