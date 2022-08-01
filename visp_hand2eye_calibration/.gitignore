@@ -2,7 +2,7 @@
 *.*~
 bin/
 build/
-include/
+#include/
 lib/
 *_gen/
 .cproject
