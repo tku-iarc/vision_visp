@@ -47,45 +47,48 @@
  \brief 
  */
 #include "rclcpp/rclcpp.hpp"
-#include "sensor_msgs/Image.h"
+#include "sensor_msgs/msg/image.hpp"
 #include "visp/vpVideoReader.h"
 #include "sensor_msgs/srv/set_camera_info.hpp"
+#include "visp_camera_calibration/srv/calibrate.hpp"
+#include "visibility.h"
 #include <string>
 
 #ifndef VISP_CAMERA_CALIBRATION_CAMERA_H_
 #define VISP_CAMERA_CALIBRATION_CAMERA_H_
 namespace visp_camera_calibration
 {
-class Camera
+class Camera  : public rclcpp::Node
 {
-private:
-  ros::NodeHandle n_;
-  ros::AsyncSpinner spinner;
-  ros::Publisher raw_image_publisher_;
-  ros::ServiceClient calibrate_service_;
 
-  ros::ServiceServer set_camera_info_service_;
+public :
+  	//! advertises services and subscribes to topics
+  VISP_CAMERA_CALIBRATION_PUBLIC Camera(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+
+  void sendVideo();
+
+private:
+// FIXME  ros::AsyncSpinner spinner;
+  rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr raw_image_publisher_;
+  rclcpp::Client<visp_camera_calibration::srv::Calibrate>::SharedPtr calibrate_service_;
+
+  rclcpp::Service<sensor_msgs::srv::SetCameraInfo>::SharedPtr set_camera_info_service_;
 
   unsigned int queue_size_;
   unsigned int nb_points_;
 
-  vpVideoReader reader_;
+  vpVideodder reader_;
   vpImage<unsigned char> img_;
 
   /*!
     \brief service setting camera parameters.
 
    */
-  bool setCameraInfoCallback(sensor_msgs::SetCameraInfo::Request  &req,
-                             sensor_msgs::SetCameraInfo::Response &res);
+  bool setCameraInfoCallback(const std::shared_ptr<rmw_request_id_t> request_header,
+      			    const std::shared_ptr<sensor_msgs::srv::SetCameraInfo::Request> request,
+      			   std::shared_ptr<sensor_msgs::srv::SetCameraInfo::Response> res);
 
-  //! service type declaration for calibrate service
-  typedef boost::function<bool (sensor_msgs::SetCameraInfo::Request&,sensor_msgs::SetCameraInfo::Response& res)>
-    set_camera_info_service_callback_t;
-public:
-  Camera();
-  void sendVideo();
-  virtual ~Camera();
+
 };
 }
 #endif /* CAMERA_H_ */

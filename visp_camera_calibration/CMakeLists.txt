@@ -119,11 +119,26 @@ target_link_libraries(${PROJECT_NAME}_image_processing
 
 add_executable(${PROJECT_NAME}_camera
   src/camera.cpp
-  src/camera_main.cpp)
+  src/camera_main.cpp
+)
+
+target_include_directories(${PROJECT_NAME}_camera PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+)
+
 target_link_libraries(${PROJECT_NAME}_camera
   ${PROJECT_NAME}_common
   ${VISP_LIBRARIES})
-ament_target_dependencies(${PROJECT_NAME}_camera rclcpp std_msgs sensor_msgs geometry_msgs visp_bridge camera_calibration_parsers)
+  
+ament_target_dependencies(${PROJECT_NAME}_camera 
+  rclcpp
+  std_msgs
+  sensor_msgs
+  geometry_msgs
+  visp_bridge
+  camera_calibration_parsers
+)
 
 
 foreach(target IN LISTS common calibrator image_processing camera)

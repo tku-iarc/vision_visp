@@ -49,8 +49,8 @@
 
 #include "image_processing.h"
 #include "visp/vpTrackingException.h"
-#include "visp_camera_calibration/msg/calib_point_array.hpp"
-#include "visp_camera_calibration/msg/calib_point.hpp"
+//#include "visp_camera_calibration/msg/calib_point_array.hpp"
+//#include "visp_camera_calibration/msg/calib_point.hpp"
 #include "visp_camera_calibration/srv/calibrate.hpp"
 #include "visp/vpMouseButton.h"
 
@@ -75,7 +75,7 @@
 namespace visp_camera_calibration
 {
 ImageProcessing::ImageProcessing() :
-    spinner_(0),
+// FIXME    spinner_(0),
     queue_size_(1000),
     pause_image_(false),
     img_(480,640,128),
@@ -338,12 +338,12 @@ void ImageProcessing::rawImageCallback(const sensor_msgs::Image::ConstPtr& image
 void ImageProcessing::interface()
 {
   vpImagePoint ip;
-  while(ros::ok()){
-    ros::spinOnce();
+  while(rclcpp::ok()){
+    rclcpp::spin_once();
     if(vpDisplay::getClick(img_,ip,false))
       pause_image_ = true;
   }
-  ros::waitForShutdown();
+// FIXME  ros::waitForShutdown();
 }
 
 ImageProcessing::~ImageProcessing()
