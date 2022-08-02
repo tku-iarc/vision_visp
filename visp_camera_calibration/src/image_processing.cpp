@@ -49,14 +49,14 @@
 
 #include "image_processing.h"
 #include "visp/vpTrackingException.h"
-#include "visp_camera_calibration/CalibPointArray.h"
-#include "visp_camera_calibration/CalibPoint.h"
-#include "visp_camera_calibration/calibrate.h"
+#include "visp_camera_calibration/msg/calib_point_array.hpp"
+#include "visp_camera_calibration/msg/calib_point.hpp"
+#include "visp_camera_calibration/srv/calibrate.hpp"
 #include "visp/vpMouseButton.h"
 
 #include "names.h"
 #include <visp_bridge/image.h>
-#include "sensor_msgs/SetCameraInfo.h"
+#include "sensor_msgs/srv/set_camera_info.hpp"
 #include "camera_calibration_parsers/parse.h"
 
 #include "visp/vpDisplayX.h"

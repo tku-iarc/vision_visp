@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 3.5)	
 project(visp_camera_calibration)
 
-find_package(ament_cmake_ros REQUIRED)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra)
+endif()
+
+find_package(ament_cmake_auto REQUIRED)
+ament_auto_find_build_dependencies()
+
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
@@ -9,18 +15,10 @@ find_package(rclcpp REQUIRED)
 find_package(camera_calibration_parsers REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
+
 # Internal packages
 find_package(VISP REQUIRED)
 find_package(visp_bridge REQUIRED)
-
-# Default to C++14
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
-endif()
-
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra)
-endif()
 
 
 # messages and services interface generation
@@ -33,7 +31,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   DEPENDENCIES std_msgs sensor_msgs geometry_msgs
  )
  
-rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME} "rosidl_typesupport_cpp")
+
+rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
 
 get_cmake_property(_variableNames VARIABLES)
 list (SORT _variableNames)
@@ -41,24 +40,107 @@ foreach (_variableName ${_variableNames})
     message(STATUS "${_variableName}=${${_variableName}}")
 endforeach()
 
-# include sub directories
-add_subdirectory(src)
- 
+# target common
+
+add_library(${PROJECT_NAME}_common
+ src/names.cpp
+)
+
+target_include_directories(${PROJECT_NAME}_common PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
+  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+)
+
+ament_target_dependencies(${PROJECT_NAME}_common 
+  rclcpp
+)
+
+# target calibrator
+
+add_executable(${PROJECT_NAME}_calibrator
+  src/calibrator.cpp
+  src/calibrator_main.cpp
+)
+
+ament_target_dependencies(${PROJECT_NAME}_calibrator 
+  sensor_msgs
+)
+  
+target_include_directories(${PROJECT_NAME}_calibrator PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+)
+
+
+target_link_libraries(${PROJECT_NAME}_calibrator
+  ${PROJECT_NAME}_common
+  "${cpp_typesupport_target}"
+  ${VISP_LIBRARIES}
+)  
+
+ament_target_dependencies(${PROJECT_NAME}_calibrator
+  rclcpp 
+  std_msgs
+  sensor_msgs
+  geometry_msgs
+  visp_bridge
+)
+
+# target image_processing
+
+add_executable(${PROJECT_NAME}_image_processing
+  src/image_processing.cpp
+  src/image_processing_main.cpp
+)
+  
+ament_target_dependencies(${PROJECT_NAME}_image_processing
+  rclcpp
+  std_msgs
+  sensor_msgs
+  geometry_msgs
+  visp_bridge
+  camera_calibration_parsers
+)
+
+target_include_directories(${PROJECT_NAME}_image_processing PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+)
+
+target_link_libraries(${PROJECT_NAME}_image_processing
+  ${PROJECT_NAME}_common
+  ${roscpp_LIBRARIES}
+  ${VISP_LIBRARIES}
+  )
+
+
+# target camera
+
+add_executable(${PROJECT_NAME}_camera
+  src/camera.cpp
+  src/camera_main.cpp)
+target_link_libraries(${PROJECT_NAME}_camera
+  ${PROJECT_NAME}_common
+  ${VISP_LIBRARIES})
+ament_target_dependencies(${PROJECT_NAME}_camera rclcpp std_msgs sensor_msgs geometry_msgs visp_bridge camera_calibration_parsers)
+
+
+foreach(target IN LISTS common calibrator image_processing camera)
+  install(TARGETS 
+    ${PROJECT_NAME}_target
+    EXPORT export_${PROJECT_NAME}
+    ARCHIVE DESTINATION lib/${PROJECT_NAME}
+    LIBRARY DESTINATION lib/${PROJECT_NAME}
+    RUNTIME DESTINATION bin/${PROJECT_NAME}
+)
+endforeach()
+
+
 # TESTS
 ament_export_dependencies(rosidl_default_runtime)
-
  
 # END TESTS
  
-# visp_camera_calibration_lib_dir is passed as APPEND_LIBRARY_DIRS for each ament_add_gtest call so
-# the project library that they link against is on the library path.
-# This is especially important on Windows.
-# This is overwritten each loop, but which one it points to doesn't really matter.
-#set(visp_camera_calibration_lib_dir "$<TARGET_FILE_DIR:${PROJECT_NAME}>")
-
-# Mark cpp header files for installation
-install(DIRECTORY include DESTINATION .)
-
-ament_export_include_directories(include)
-
 ament_package()
+

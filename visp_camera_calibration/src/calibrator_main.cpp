@@ -48,13 +48,14 @@
 */
 
 #include "calibrator.h"
-#include "ros/ros.h"
+#include <rclcpp/rclcpp.hpp>
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "calibrator");
-
-  visp_camera_calibration::Calibrator().spin();
+  rclcpp::init(argc, argv);
+  auto node = std::make_shared<visp_camera_calibration::Calibrator>();
+  rclcpp::spin(node);
+  rclcpp::shutdown();
 
   return 0;
 }
