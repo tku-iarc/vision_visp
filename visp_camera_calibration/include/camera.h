@@ -66,6 +66,7 @@ public :
   VISP_CAMERA_CALIBRATION_PUBLIC Camera(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
   void sendVideo();
+  ~Camera();
 
 private:
 // FIXME  ros::AsyncSpinner spinner;
@@ -77,7 +78,7 @@ private:
   unsigned int queue_size_;
   unsigned int nb_points_;
 
-  vpVideodder reader_;
+  vpVideoReader reader_;
   vpImage<unsigned char> img_;
 
   /*!

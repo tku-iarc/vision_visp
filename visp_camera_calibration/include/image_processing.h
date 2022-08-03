@@ -55,6 +55,7 @@
 #include "visibility.h"
 #include "visp_camera_calibration/msg/calib_point_array.hpp"
 #include "visp_camera_calibration/msg/calib_point.hpp"
+#include "visp_camera_calibration/srv/calibrate.hpp"
 #include <vector>
 #include <string>
 #include <boost/thread/thread.hpp>

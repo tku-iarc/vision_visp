@@ -57,7 +57,6 @@ int main(int argc,char** argv){
   rclcpp::spin(node);
   rclcpp::shutdown();
 
-  ros::init(argc, argv, "image_processing");
 
 // FIXME ?
 //  visp_camera_calibration::ImageProcessing proc;

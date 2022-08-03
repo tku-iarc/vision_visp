@@ -62,10 +62,6 @@ add_executable(${PROJECT_NAME}_calibrator
   src/calibrator.cpp
   src/calibrator_main.cpp
 )
-
-ament_target_dependencies(${PROJECT_NAME}_calibrator 
-  sensor_msgs
-)
   
 target_include_directories(${PROJECT_NAME}_calibrator PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
@@ -94,6 +90,18 @@ add_executable(${PROJECT_NAME}_image_processing
   src/image_processing_main.cpp
 )
   
+target_include_directories(${PROJECT_NAME}_image_processing PUBLIC
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+)
+
+target_link_libraries(${PROJECT_NAME}_image_processing
+  ${PROJECT_NAME}_common
+  "${cpp_typesupport_target}"
+  ${roscpp_LIBRARIES}
+  ${VISP_LIBRARIES}
+  )
+
 ament_target_dependencies(${PROJECT_NAME}_image_processing
   rclcpp
   std_msgs
@@ -102,17 +110,6 @@ ament_target_dependencies(${PROJECT_NAME}_image_processing
   visp_bridge
   camera_calibration_parsers
 )
-
-target_include_directories(${PROJECT_NAME}_image_processing PUBLIC
-  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
-  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
-)
-
-target_link_libraries(${PROJECT_NAME}_image_processing
-  ${PROJECT_NAME}_common
-  ${roscpp_LIBRARIES}
-  ${VISP_LIBRARIES}
-  )
 
 
 # target camera
@@ -129,7 +126,10 @@ target_include_directories(${PROJECT_NAME}_camera PUBLIC
 
 target_link_libraries(${PROJECT_NAME}_camera
   ${PROJECT_NAME}_common
-  ${VISP_LIBRARIES})
+  "${cpp_typesupport_target}"
+  ${roscpp_LIBRARIES}
+  ${VISP_LIBRARIES}
+)
   
 ament_target_dependencies(${PROJECT_NAME}_camera 
   rclcpp
