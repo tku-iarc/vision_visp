@@ -141,21 +141,19 @@ ament_target_dependencies(${PROJECT_NAME}_camera
 )
 
 
-foreach(target IN LISTS common calibrator image_processing camera)
-  install(TARGETS 
-    ${PROJECT_NAME}_target
-    EXPORT export_${PROJECT_NAME}
-    ARCHIVE DESTINATION lib/${PROJECT_NAME}
-    LIBRARY DESTINATION lib/${PROJECT_NAME}
-    RUNTIME DESTINATION bin/${PROJECT_NAME}
+install(
+  TARGETS
+  ${PROJECT_NAME}_common
+  ${PROJECT_NAME}_calibrator
+  ${PROJECT_NAME}_image_processing
+  ${PROJECT_NAME}_camera
+  DESTINATION lib/${PROJECT_NAME}
 )
-endforeach()
 
-
-# TESTS
+install(DIRECTORY
+  launch
+  DESTINATION share/${PROJECT_NAME}
+)
 ament_export_dependencies(rosidl_default_runtime)
- 
-# END TESTS
- 
-ament_package()
 
+ament_package()

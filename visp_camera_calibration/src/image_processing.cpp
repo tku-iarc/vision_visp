@@ -93,6 +93,15 @@ ImageProcessing::ImageProcessing(const rclcpp::NodeOptions & options) : Node("ca
   
   set_camera_info_bis_service_ = this->create_service<sensor_msgs::srv::SetCameraInfo>(visp_camera_calibration::set_camera_info_bis_service, std::bind(&ImageProcessing::setCameraInfoBisCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 
+  // Declare parameters
+  std::vector<double> model_points_x;
+  std::vector<double> model_points_y;
+  std::vector<double> model_points_z;
+
+  this->declare_parameter<std::vector<double> >(visp_camera_calibration::model_points_x_param);
+  this->declare_parameter<std::vector<double> >(visp_camera_calibration::model_points_y_param);
+  this->declare_parameter<std::vector<double> >(visp_camera_calibration::model_points_z_param);
+
   // read 3D model from parameters
   rclcpp::Parameter model_points_x_list = this->get_parameter(visp_camera_calibration::model_points_x_param);
   rclcpp::Parameter model_points_y_list = this->get_parameter(visp_camera_calibration::model_points_y_param);

@@ -86,6 +86,8 @@ Camera::Camera(const rclcpp::NodeOptions & options) : Node("camera", options),
   calibrate_service_ =  this->create_client<visp_camera_calibration::srv::Calibrate> (visp_camera_calibration::calibrate_service);
 
   this->declare_parameter<std::string>(visp_camera_calibration::images_path_param);
+  rclcpp::Parameter images_path_param = this->get_parameter(visp_camera_calibration::images_path_param);
+  images_path = images_path_param.as_string();
   
   reader_.setFileName(images_path.c_str());
   reader_.setFirstFrameIndex(1);
