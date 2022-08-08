@@ -124,6 +124,15 @@ ImageProcessing::ImageProcessing(const rclcpp::NodeOptions & options) : Node("ca
     model_points_.push_back(p);
   }
 
+  // Declare parameters
+  std::vector<double> selected_points_x;
+  std::vector<double> selected_points_y;
+  std::vector<double> selected_points_z;
+
+  this->declare_parameter<std::vector<double> >(visp_camera_calibration::selected_points_x_param);
+  this->declare_parameter<std::vector<double> >(visp_camera_calibration::selected_points_y_param);
+  this->declare_parameter<std::vector<double> >(visp_camera_calibration::selected_points_z_param);
+
   //define selected model points
   rclcpp::Parameter selected_points_x_list = this->get_parameter(visp_camera_calibration::selected_points_x_param);
   rclcpp::Parameter selected_points_y_list = this->get_parameter(visp_camera_calibration::selected_points_y_param);

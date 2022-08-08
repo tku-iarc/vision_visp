@@ -47,11 +47,12 @@
   \brief File containing names of topics or services used all accross the package
 */
 
-#ifndef __visp_hand2eye_calibration_NAMES_H__
-# define __visp_hand2eye_calibration_NAMES_H__
+#ifndef VISP_CAMERA_CALIBRATION__NAMES_H__
+# define VISP_CAMERA_CALIBRATION__NAMES_H__
 # include <string>
 
-// define topic and service names for the visp_hand2eye_calibration package.
+// define topic and service names for the visp_camera_calibration package.
+
 namespace visp_camera_calibration
 {
   extern std::string camera_prefix;
