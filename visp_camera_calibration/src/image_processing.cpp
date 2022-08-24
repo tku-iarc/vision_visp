@@ -12,7 +12,7 @@
  * distribution for additional information about the GNU GPL.
  *
  * For using ViSP with software that can not be combined with the GNU
- * GPL, please contact INRIA about acquiring a ViSP Professional 
+ * GPL, please contact INRIA about acquiring a ViSP Profƒessional 
  * Edition License.
  *
  * See http://www.irisa.fr/lagadic/visp/visp.html for more information.
@@ -152,6 +152,16 @@ ImageProcessing::ImageProcessing(const rclcpp::NodeOptions & options) : Node("ca
       p.setWorldCoordinates(X,Y,Z);
       selected_points_.push_back(p);
     }
+    
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"1");
+  this->declare_parameter<double>(visp_camera_calibration::gray_level_precision_param,0.7);
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"2");
+  this->declare_parameter<double>(visp_camera_calibration::size_precision_param, 0.5);
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"3");
+  this->declare_parameter<bool>(visp_camera_calibration::pause_at_each_frame_param, 1); // True
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"4");
+  this->declare_parameter<std::string>(visp_camera_calibration::calibration_path_param,std::string("/"));
+    
 }
 
 void ImageProcessing::init() 
@@ -184,7 +194,7 @@ bool ImageProcessing::setCameraInfoBisCallback(const std::shared_ptr<rmw_request
       std::shared_ptr<sensor_msgs::srv::SetCameraInfo::Response> /*res*/) {
   std::string calibration_path;
   
-  this->declare_parameter<double>(visp_camera_calibration::calibration_path_param);
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"setCameraInfoBisCallback");
   rclcpp::Parameter calibration_path_param = this->get_parameter(visp_camera_calibration::calibration_path_param);
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"saving calibration file to %s",calibration_path.c_str());
   camera_calibration_parsers::writeCalibration(calibration_path,visp_camera_calibration::raw_image_topic,req->camera_info);
@@ -197,12 +207,10 @@ void ImageProcessing::rawImageCallback(const sensor_msgs::msg::Image::SharedPtr 
   double size_precision;
   bool pause_at_each_frame = false; //Wait for user input each time a new frame is recieved.
 
-  this->declare_parameter<double>(visp_camera_calibration::gray_level_precision_param);
-  rclcpp::Parameter gray_level_precision_param = this->get_parameter(visp_camera_calibration::gray_level_precision_param);
-  this->declare_parameter<double>(visp_camera_calibration::size_precision_param);
-  rclcpp::Parameter size_precision_param = this->get_parameter(visp_camera_calibration::size_precision_param);
-  this->declare_parameter<double>(visp_camera_calibration::pause_at_each_frame_param);
-  rclcpp::Parameter pause_at_each_frame_param = this->get_parameter(visp_camera_calibration::pause_at_each_frame_param);
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"ImageProcessing::rawImageCallback");
+  gray_level_precision = this->get_parameter(visp_camera_calibration::gray_level_precision_param).as_double();
+  size_precision = this->get_parameter(visp_camera_calibration::size_precision_param).as_double();
+  pause_at_each_frame = this->get_parameter(visp_camera_calibration::pause_at_each_frame_param).as_bool();
 
 
   vpPose pose;
@@ -342,9 +350,11 @@ void ImageProcessing::rawImageCallback(const sensor_msgs::msg::Image::SharedPtr 
     vpMouseButton::vpMouseButtonType btn;
     while(rclcpp::ok() && !vpDisplay::getClick(img_,ip,btn, false));
 		
-    if(btn==vpMouseButton::button1)
+    if(btn==vpMouseButton::button1) {
       point_correspondence_publisher_->publish(calib_all_points);
-    else{
+      RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"publish all points END");
+    } else{
+      RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Call rawImageCallback");
       rawImageCallback(image);
       return;
     }

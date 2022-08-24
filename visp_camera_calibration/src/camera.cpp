@@ -101,8 +101,7 @@ Camera::Camera(const rclcpp::NodeOptions & options) : Node("camera", options),
   vpDisplay::display(img_);
   vpDisplay::displayCharString(img_,img_.getHeight()/2,img_.getWidth()/4,"Click to publish camera feed.",vpColor::red);
   vpDisplay::flush(img_);
-// FIXME
-//  spinner.start();
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "CAMERA CREATION END");
 }
 
 void Camera::sendVideo(){

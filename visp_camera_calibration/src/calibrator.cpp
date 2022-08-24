@@ -137,18 +137,33 @@ namespace visp_camera_calibration
 
     RCLCPP_INFO_STREAM(rclcpp::get_logger("rclcpp"),"" << cam);
 
+    //  sensor_msgs::SetCameraInfo set_camera_info_comm;
+    //  set_camera_info_comm.request.camera_info = visp_bridge::toSensorMsgsCameraInfo(cam,req.sample_width,req.sample_height);
     auto request = std::make_shared<sensor_msgs::srv::SetCameraInfo::Request>();
-    request->camera_info = visp_bridge::toSensorMsgsCameraInfo(cam,req->sample_width,req->sample_height);;
+    request->camera_info = visp_bridge::toSensorMsgsCameraInfo(cam,req->sample_width,req->sample_height);
 
+    //  set_camera_info_service_.call(set_camera_info_comm);
     auto result = set_camera_info_service_->async_send_request(request);
-    auto result2 = set_camera_info_bis_service_->async_send_request(request);
+    auto result_bis = set_camera_info_bis_service_->async_send_request(request);
+    
+  //  if(set_camera_info_bis_service_.call(set_camera_info_comm)){
+  //    ROS_INFO("set_camera_info service called successfully");
+  //  }else{
+  //    ROS_ERROR("Failed to call service set_camera_info");
+  //  } 
+       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"set_camera_info service called ------");
 
-    // FIXME ??
-    if(rclcpp::spin_until_future_complete(this->get_node_base_interface(), result2) == rclcpp::FutureReturnCode::SUCCESS) {
-      RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "set_camera_info service called successfully");
-    }else{
-      RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to call service set_camera_info");
+    while (not result_bis.done()) {
+       time.sleep(0.5)
+       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Wait...");
     }
+    if (result_bis ) {
+       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"set_camera_info service called");
+    }else{
+       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Failed to call service set_camera_info");
+       RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),"Failed to call service set_camera_info");
+    } 
+    
     return true;
   }
 } // namespace visp_camera_calibration

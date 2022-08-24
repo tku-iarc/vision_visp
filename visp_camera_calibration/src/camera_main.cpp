@@ -54,12 +54,11 @@
 int main(int argc,char** argv){
   rclcpp::init(argc, argv);
   auto node = std::make_shared<visp_camera_calibration::Camera>();
+  node->sendVideo();
+  
   rclcpp::spin(node);
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"CAMERA MAIN SHUTDOWN");
   rclcpp::shutdown();
-// FIXME  
-//  ros::init(argc, argv, "camera");
-//  visp_camera_calibration::Camera cam;
-//  cam.sendVideo();
 
   return 0;
 }
