@@ -97,7 +97,7 @@ namespace visp_camera_calibration
     std::vector<double> dev;
     std::vector<double> dev_dist;
     double lambda = .5;
-    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "called service calibrate");
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "called service calibrate --------------------");
     vpCameraParameters cam;
 
     double px = cam.get_px();
@@ -136,24 +136,30 @@ namespace visp_camera_calibration
 
 
     RCLCPP_INFO_STREAM(rclcpp::get_logger("rclcpp"),"" << cam);
+       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"+++++ 1");
 
     //  sensor_msgs::SetCameraInfo set_camera_info_comm;
     //  set_camera_info_comm.request.camera_info = visp_bridge::toSensorMsgsCameraInfo(cam,req.sample_width,req.sample_height);
     auto request = std::make_shared<sensor_msgs::srv::SetCameraInfo::Request>();
+       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"+++++ 2");
     request->camera_info = visp_bridge::toSensorMsgsCameraInfo(cam,req->sample_width,req->sample_height);
 
     //  set_camera_info_service_.call(set_camera_info_comm);
+       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Call set_camera_info_service  ---------  OK");
     auto result = set_camera_info_service_->async_send_request(request);
-    auto result_bis = set_camera_info_bis_service_->async_send_request(request);
-    
-  //  if(set_camera_info_bis_service_.call(set_camera_info_comm)){
-  //    ROS_INFO("set_camera_info service called successfully");
-  //  }else{
-  //    ROS_ERROR("Failed to call service set_camera_info");
-  //  } 
-       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"set_camera_info service called ------");
+       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Call set_camera_info_service bis----------OK");
 
-    while (not result_bis.done()) {
+    auto result_bis = set_camera_info_bis_service_->async_send_request(request);
+       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Call set_camera_info_service bis----------NEVER GOES HERE ?");
+    
+    if(result_bis.get()->success){
+      RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"set_camera_info service called successfully");
+    }else{
+      RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),"Failed to call service set_camera_info");
+    } 
+       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"set_camera_info service called ------%d", result_bis.get()->success);
+
+/*    while (not result_bis.done()) {
        time.sleep(0.5)
        RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Wait...");
     }
@@ -163,7 +169,7 @@ namespace visp_camera_calibration
        RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Failed to call service set_camera_info");
        RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),"Failed to call service set_camera_info");
     } 
-    
+  */  
     return true;
   }
 } // namespace visp_camera_calibration

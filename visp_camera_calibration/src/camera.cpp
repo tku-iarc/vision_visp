@@ -140,6 +140,7 @@ void Camera::sendVideo(){
   calibrate_comm->sample_height = img_.getHeight();
   
   auto calibrate_comm_result = calibrate_service_->async_send_request(calibrate_comm);
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"CAMERA: sendVideo before spin +++++++");
   
   if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), calibrate_comm_result) == rclcpp::FutureReturnCode::SUCCESS){
       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"service called successfully");

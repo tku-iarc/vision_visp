@@ -194,10 +194,11 @@ bool ImageProcessing::setCameraInfoBisCallback(const std::shared_ptr<rmw_request
       std::shared_ptr<sensor_msgs::srv::SetCameraInfo::Response> /*res*/) {
   std::string calibration_path;
   
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"setCameraInfoBisCallback");
-  rclcpp::Parameter calibration_path_param = this->get_parameter(visp_camera_calibration::calibration_path_param);
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"ImageProcessing::setCameraInfoBisCallback");
+  calibration_path = this->get_parameter(visp_camera_calibration::calibration_path_param).as_string();
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"saving calibration file to %s",calibration_path.c_str());
   camera_calibration_parsers::writeCalibration(calibration_path,visp_camera_calibration::raw_image_topic,req->camera_info);
+  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"ImageProcessing::setCameraInfoBisCallback RETURN TRUE");
   return true;
 }
 
