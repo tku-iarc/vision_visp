@@ -65,7 +65,6 @@ target_include_directories(${PROJECT_NAME}_calibrator PUBLIC
   "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
 )
 
-
 target_link_libraries(${PROJECT_NAME}_calibrator
   ${PROJECT_NAME}_common
   "${cpp_typesupport_target}"

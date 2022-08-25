@@ -57,7 +57,6 @@ int main(int argc,char** argv){
   node->sendVideo();
   
   rclcpp::spin(node);
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"CAMERA MAIN SHUTDOWN");
   rclcpp::shutdown();
 
   return 0;

@@ -55,7 +55,6 @@ int main(int argc,char** argv){
   rclcpp::init(argc, argv);
   auto node = std::make_shared<visp_camera_calibration::ImageProcessing>();
   rclcpp::spin(node);
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"IMG PROCESSING MAIN SHUTDOWN");
   rclcpp::shutdown();
   return 0;
 }

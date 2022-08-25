@@ -87,8 +87,6 @@ public :
 
   void sendVideo();
   ~Camera();
-
-
 };
 }
 #endif /* CAMERA_H_ */
