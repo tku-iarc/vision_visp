@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5)	
+cmake_minimum_required(VERSION 3.5)
 project(visp_camera_calibration)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -15,7 +15,6 @@ find_package(rclcpp REQUIRED)
 find_package(camera_calibration_parsers REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 
-
 # Internal packages
 find_package(VISP REQUIRED)
 find_package(visp_bridge REQUIRED)
@@ -30,7 +29,6 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/Calibrate.srv"
   DEPENDENCIES std_msgs sensor_msgs geometry_msgs
  )
- 
 
 rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" "rosidl_typesupport_cpp")
 
@@ -60,8 +58,7 @@ ament_target_dependencies(${PROJECT_NAME}_common
 
 add_executable(${PROJECT_NAME}_calibrator
   src/calibrator.cpp
-  src/calibrator_main.cpp
-)
+  src/calibrator_main.cpp)
   
 target_include_directories(${PROJECT_NAME}_calibrator PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
@@ -87,8 +84,7 @@ ament_target_dependencies(${PROJECT_NAME}_calibrator
 
 add_executable(${PROJECT_NAME}_image_processing
   src/image_processing.cpp
-  src/image_processing_main.cpp
-)
+  src/image_processing_main.cpp)
   
 target_include_directories(${PROJECT_NAME}_image_processing PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
@@ -111,13 +107,11 @@ ament_target_dependencies(${PROJECT_NAME}_image_processing
   camera_calibration_parsers
 )
 
-
 # target camera
 
 add_executable(${PROJECT_NAME}_camera
   src/camera.cpp
-  src/camera_main.cpp
-)
+  src/camera_main.cpp)
 
 target_include_directories(${PROJECT_NAME}_camera PUBLIC
   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
@@ -128,8 +122,7 @@ target_link_libraries(${PROJECT_NAME}_camera
   ${PROJECT_NAME}_common
   "${cpp_typesupport_target}"
   ${roscpp_LIBRARIES}
-  ${VISP_LIBRARIES}
-)
+  ${VISP_LIBRARIES})
   
 ament_target_dependencies(${PROJECT_NAME}_camera 
   rclcpp

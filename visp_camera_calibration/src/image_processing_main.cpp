@@ -48,6 +48,7 @@
 */
 
 #include "image_processing.h"
+
 #include "rclcpp/rclcpp.hpp"
 
 int main(int argc,char** argv){
@@ -56,10 +57,5 @@ int main(int argc,char** argv){
   rclcpp::spin(node);
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"IMG PROCESSING MAIN SHUTDOWN");
   rclcpp::shutdown();
-
-
-// FIXME ?
-//  visp_camera_calibration::ImageProcessing proc;
-//  proc.interface();
   return 0;
 }

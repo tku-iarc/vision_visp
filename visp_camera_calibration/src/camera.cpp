@@ -68,7 +68,6 @@
 namespace visp_camera_calibration
 {
 Camera::Camera(const rclcpp::NodeOptions & options) : Node("camera", options),
-// FIXME            spinner(0),
             queue_size_(1000),
             nb_points_(4),
             img_(360,480,255)
@@ -82,7 +81,7 @@ Camera::Camera(const rclcpp::NodeOptions & options) : Node("camera", options),
 
 
   raw_image_publisher_ = this->create_publisher<sensor_msgs::msg::Image>(visp_camera_calibration::raw_image_topic, queue_size_ );
-  
+
   calibrate_service_ =  this->create_client<visp_camera_calibration::srv::Calibrate> (visp_camera_calibration::calibrate_service);
 
   this->declare_parameter<std::string>(visp_camera_calibration::images_path_param);
@@ -105,11 +104,6 @@ Camera::Camera(const rclcpp::NodeOptions & options) : Node("camera", options),
 }
 
 void Camera::sendVideo(){
-//  double gray_level_precision;
-//  double size_precision;
-// FIXME : not useful
-//  ros::param::getCached(visp_camera_calibration::gray_level_precision_param,gray_level_precision);
-//  ros::param::getCached(visp_camera_calibration::size_precision_param,size_precision);
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "Click to start sending image data");
   while(rclcpp::ok() && !vpDisplay::getClick(img_,false));
 
@@ -140,10 +134,10 @@ void Camera::sendVideo(){
   calibrate_comm->sample_height = img_.getHeight();
   
   auto calibrate_comm_result = calibrate_service_->async_send_request(calibrate_comm);
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"CAMERA: sendVideo before spin +++++++");
   
   if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), calibrate_comm_result) == rclcpp::FutureReturnCode::SUCCESS){
       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"service called successfully");
+
 
       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"standard deviation with distorsion:");
       for(std::vector<double>::iterator i = calibrate_comm_result.get()->std_dev_errs.begin();i!=calibrate_comm_result.get()->std_dev_errs.end();i++)

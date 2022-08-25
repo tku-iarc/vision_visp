@@ -12,7 +12,7 @@
  * distribution for additional information about the GNU GPL.
  *
  * For using ViSP with software that can not be combined with the GNU
- * GPL, please contact INRIA about acquiring a ViSP Profƒessional 
+ * GPL, please contact INRIA about acquiring a ViSP Professional 
  * Edition License.
  *
  * See http://www.irisa.fr/lagadic/visp/visp.html for more information.
@@ -75,7 +75,6 @@
 namespace visp_camera_calibration
 {
 ImageProcessing::ImageProcessing(const rclcpp::NodeOptions & options) : Node("calibrator", options),
-// FIXME    spinner_(0),
     queue_size_(1000),
     pause_image_(false),
     img_(480,640,128),
@@ -160,7 +159,7 @@ ImageProcessing::ImageProcessing(const rclcpp::NodeOptions & options) : Node("ca
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"3");
   this->declare_parameter<bool>(visp_camera_calibration::pause_at_each_frame_param, 1); // True
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"4");
-  this->declare_parameter<std::string>(visp_camera_calibration::calibration_path_param,std::string("/"));
+  this->declare_parameter<std::string>(visp_camera_calibration::calibration_path_param,std::string(""));
     
 }
 
@@ -196,7 +195,6 @@ bool ImageProcessing::setCameraInfoBisCallback(const std::shared_ptr<rmw_request
   
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"ImageProcessing::setCameraInfoBisCallback");
   calibration_path = this->get_parameter(visp_camera_calibration::calibration_path_param).as_string();
-  RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"saving calibration file to %s",calibration_path.c_str());
   camera_calibration_parsers::writeCalibration(calibration_path,visp_camera_calibration::raw_image_topic,req->camera_info);
   RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"ImageProcessing::setCameraInfoBisCallback RETURN TRUE");
   return true;
@@ -374,7 +372,8 @@ void ImageProcessing::interface()
     if(vpDisplay::getClick(img_,ip,false))
       pause_image_ = true;
   }
-// FIXME  ros::waitForShutdown();
+  // FIXME : Have to do something at shutdown ?
+  //ros::waitForShutdown();
 }
 
 ImageProcessing::~ImageProcessing()

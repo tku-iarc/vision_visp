@@ -51,8 +51,6 @@
 #include "names.h"
 #include <visp_bridge/image.h>
 #include <visp_bridge/camera.h>
-//#include "sensor_msgs/srv/SetCameraInfo.srv"
-//#include "sensor_msgs/CameraInfo.h"
 // Messages
 #include "visp_camera_calibration/msg/calib_point.hpp"
 
@@ -68,7 +66,7 @@ namespace visp_camera_calibration
     point_correspondence_subscriber_ = this->create_subscription<visp_camera_calibration::msg::CalibPointArray>( visp_camera_calibration::point_correspondence_topic, queue_size_, std::bind(&Calibrator::pointCorrespondenceCallback, this, std::placeholders::_1));
 
     //define services
-    calibrate_service_ = this->create_service<visp_camera_calibration::srv::Calibrate>(visp_camera_calibration::calibrate_service, std::bind(&Calibrator::calibrate, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    calibrate_service_ = this->create_service<visp_camera_calibration::srv::Calibrate>(visp_camera_calibration::calibrate_service, std::bind(&Calibrator::calibrateCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 
     //connect to services
     set_camera_info_service_ = this->create_client<sensor_msgs::srv::SetCameraInfo> (visp_camera_calibration::set_camera_info_service);
@@ -91,13 +89,13 @@ namespace visp_camera_calibration
 
   }
 
-  bool Calibrator::calibrate(const std::shared_ptr<rmw_request_id_t> /*request_header*/,
+  bool Calibrator::calibrateCallback(const std::shared_ptr<rmw_request_id_t> /*request_header*/,
   	const std::shared_ptr<visp_camera_calibration::srv::Calibrate::Request > req,
         std::shared_ptr<visp_camera_calibration::srv::Calibrate::Response> res) {
     std::vector<double> dev;
     std::vector<double> dev_dist;
     double lambda = .5;
-    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "called service calibrate --------------------");
+    RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "called service calibrate");
     vpCameraParameters cam;
 
     double px = cam.get_px();
@@ -136,40 +134,19 @@ namespace visp_camera_calibration
 
 
     RCLCPP_INFO_STREAM(rclcpp::get_logger("rclcpp"),"" << cam);
-       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"+++++ 1");
 
-    //  sensor_msgs::SetCameraInfo set_camera_info_comm;
-    //  set_camera_info_comm.request.camera_info = visp_bridge::toSensorMsgsCameraInfo(cam,req.sample_width,req.sample_height);
     auto request = std::make_shared<sensor_msgs::srv::SetCameraInfo::Request>();
-       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"+++++ 2");
     request->camera_info = visp_bridge::toSensorMsgsCameraInfo(cam,req->sample_width,req->sample_height);
 
-    //  set_camera_info_service_.call(set_camera_info_comm);
-       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Call set_camera_info_service  ---------  OK");
     auto result = set_camera_info_service_->async_send_request(request);
-       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Call set_camera_info_service bis----------OK");
-
     auto result_bis = set_camera_info_bis_service_->async_send_request(request);
-       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Call set_camera_info_service bis----------NEVER GOES HERE ?");
     
     if(result_bis.get()->success){
       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"set_camera_info service called successfully");
     }else{
       RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),"Failed to call service set_camera_info");
     } 
-       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"set_camera_info service called ------%d", result_bis.get()->success);
 
-/*    while (not result_bis.done()) {
-       time.sleep(0.5)
-       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Wait...");
-    }
-    if (result_bis ) {
-       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"set_camera_info service called");
-    }else{
-       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Failed to call service set_camera_info");
-       RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),"Failed to call service set_camera_info");
-    } 
-  */  
     return true;
   }
 } // namespace visp_camera_calibration

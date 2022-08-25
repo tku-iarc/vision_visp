@@ -52,7 +52,6 @@
 # include <string>
 
 // define topic and service names for the visp_camera_calibration package.
-
 namespace visp_camera_calibration
 {
   extern std::string camera_prefix;

@@ -94,7 +94,7 @@ namespace visp_camera_calibration
       \brief service performing the calibration from all previously computed calibration objects.
 
      */
-    bool calibrate(const std::shared_ptr<rmw_request_id_t> request_header,
+    bool calibrateCallback(const std::shared_ptr<rmw_request_id_t> request_header,
       			   const std::shared_ptr<visp_camera_calibration::srv::Calibrate::Request> request,
       			   std::shared_ptr<visp_camera_calibration::srv::Calibrate::Response> res);
 

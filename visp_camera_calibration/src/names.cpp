@@ -73,7 +73,7 @@ namespace visp_camera_calibration
   std::string selected_points_z_param("/visp_camera_calibration/visp_camera_calibration_image_processing/selected_points_z");
 
   std::string calibration_path_param("/visp_camera_calibration/visp_camera_calibration_image_processing/calibration_path");
-  //FIXME L.Garnier: To be check
+  //FIXME L.Garnier: To be done
   void remap(){
 /*    if (rclcpp::resolve_topic_name("camera_prefix") != "camera_prefix") {
       camera_prefix = rclcpp::resolve_topic_name("camera_prefix");

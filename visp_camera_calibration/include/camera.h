@@ -61,15 +61,7 @@ namespace visp_camera_calibration
 class Camera  : public rclcpp::Node
 {
 
-public :
-  	//! advertises services and subscribes to topics
-  VISP_CAMERA_CALIBRATION_PUBLIC Camera(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
-
-  void sendVideo();
-  ~Camera();
-
 private:
-// FIXME  ros::AsyncSpinner spinner;
   rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr raw_image_publisher_;
   rclcpp::Client<visp_camera_calibration::srv::Calibrate>::SharedPtr calibrate_service_;
 
@@ -88,6 +80,13 @@ private:
   bool setCameraInfoCallback(const std::shared_ptr<rmw_request_id_t> request_header,
       			    const std::shared_ptr<sensor_msgs::srv::SetCameraInfo::Request> request,
       			   std::shared_ptr<sensor_msgs::srv::SetCameraInfo::Response> res);
+
+public :
+  	//! advertises services and subscribes to topics
+  VISP_CAMERA_CALIBRATION_PUBLIC Camera(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
+
+  void sendVideo();
+  ~Camera();
 
 
 };

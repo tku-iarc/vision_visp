@@ -67,12 +67,8 @@ namespace visp_camera_calibration
 {
 class ImageProcessing : public rclcpp::Node
 {
-public : 
-  	//! advertises services and subscribes to topics
-    VISP_CAMERA_CALIBRATION_PUBLIC ImageProcessing(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
 
 private :
-// FIXME   ros::AsyncSpinner spinner_;
 
   unsigned long queue_size_;
   bool pause_image_;
@@ -102,7 +98,7 @@ private :
     \param image_and_points: image of the grid and selected keypoints to compute on
    */
   void rawImageCallback(const sensor_msgs::msg::Image::SharedPtr image);
-  
+
   /*!
     \brief service displaying.
 
@@ -111,6 +107,8 @@ private :
       const std::shared_ptr<sensor_msgs::srv::SetCameraInfo::Request> req,
       std::shared_ptr<sensor_msgs::srv::SetCameraInfo::Response> res);
 public:
+  	//! advertises services and subscribes to topics
+  VISP_CAMERA_CALIBRATION_PUBLIC ImageProcessing(const rclcpp::NodeOptions & options = rclcpp::NodeOptions());
   void interface();
 
   virtual ~ImageProcessing();

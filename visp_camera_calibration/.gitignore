@@ -4,10 +4,10 @@ CMakeCache.txt
 CMakeFiles
 bin
 build
-#include
 lib
 *.dox
 *_gen
 .cproject
 .project
 .pydevproject
+
