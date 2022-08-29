@@ -4,17 +4,18 @@
   schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package  format="3">
   <name>visp_camera_calibration</name>
-  <version>0.13.2</version>
+  <version>0.13.1</version>
 
   <description>
      visp_camera_calibration allows easy calibration of
      cameras using a customizable pattern and ViSP library.
   </description>
-  
+
   <author>Laurent Garnier</author>
+  <author>Fabien Spindler</author>
   <author>Filip Novotny</author>
   <maintainer email="Fabien.Spindler@inria.fr">Fabien Spindler</maintainer>
-  
+
   <license>GPLv2</license>
   <url type="website">http://wiki.ros.org/visp_camera_calibration</url>
   <url type="repository">https://github.com/lagadic/vision_visp/tree/ros2</url>
@@ -30,7 +31,7 @@
   <build_depend>camera_calibration_parsers</build_depend> <!-- Write camera data to ini file -->
   <build_depend>geometry_msgs</build_depend>
   <build_depend>message_generation</build_depend>
-  <build_depend>roscpp</build_depend>
+  <build_depend>rclcpp</build_depend>
   <build_depend>sensor_msgs</build_depend>
   <build_depend>std_msgs</build_depend>
 
@@ -38,15 +39,15 @@
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>message_generation</exec_depend>
   <exec_depend>message_runtime</exec_depend>
-  <exec_depend>roscpp</exec_depend>
+  <exec_depend>rclcpp</exec_depend>
   <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>visp</exec_depend>
   <exec_depend>rqt_console</exec_depend>
   <exec_depend>rosidl_default_runtime</exec_depend>
-  
+
   <member_of_group>rosidl_interface_packages</member_of_group>
-  
+
   <export>
     <build_type>ament_cmake</build_type>
   </export>
