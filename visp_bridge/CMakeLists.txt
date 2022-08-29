@@ -38,6 +38,4 @@ install(TARGETS ${PROJECT_NAME}
   LIBRARY DESTINATION lib
 )
 
-ament_export_include_directories(include)
-
 ament_package()
