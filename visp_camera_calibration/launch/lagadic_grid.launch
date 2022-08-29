@@ -6,7 +6,7 @@
 
 		<node pkg="visp_camera_calibration" name="visp_camera_calibration_calibrator" exec="visp_camera_calibration_calibrator"/>
 		
-		<node pkg="visp_camera_calibration" name="visp_camera_calibration_image_processing" exec="visp_camera_calibration_image_processing" args="camera_prefix:=/visp_camera_calibration">
+		<node pkg="visp_camera_calibration" name="visp_camera_calibration_image_processing" exec="visp_camera_calibration_image_processing" args="--ros-args --remap camera_prefix:=/visp_camera_calibration">
 		      <param name="/visp_camera_calibration/visp_camera_calibration_image_processing/gray_level_precision" value="0.7" />
 		      <param name="/visp_camera_calibration/visp_camera_calibration_image_processing/size_precision" value="0.5" />
 		      <param name="/visp_camera_calibration/visp_camera_calibration_image_processing/pause_at_each_frame" value="True" />
