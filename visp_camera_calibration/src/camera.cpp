@@ -133,13 +133,14 @@ void Camera::sendVideo(){
   calibrate_comm->sample_height = img_.getHeight();
   
   auto calibrate_comm_result = calibrate_service_->async_send_request(calibrate_comm);
-  
+
   if (rclcpp::spin_until_future_complete(this->get_node_base_interface(), calibrate_comm_result) == rclcpp::FutureReturnCode::SUCCESS){
       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"service called successfully");
 
 
       RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"standard deviation with distorsion:");
-      for(std::vector<double>::iterator i = calibrate_comm_result.get()->std_dev_errs.begin();i!=calibrate_comm_result.get()->std_dev_errs.end();i++)
+      std::vector<double> dev_errs = calibrate_comm_result.get()->std_dev_errs;
+      for(std::vector<double>::iterator i = dev_errs.begin();i!=dev_errs.end();i++)
         RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "%f",*i);
   }else{
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"Failed to call service");

@@ -139,14 +139,25 @@ namespace visp_camera_calibration
     request->camera_info = visp_bridge::toSensorMsgsCameraInfo(cam,req->sample_width,req->sample_height);
 
     auto result = set_camera_info_service_->async_send_request(request);
-    auto result_bis = set_camera_info_bis_service_->async_send_request(request);
-    
-    if(result_bis.get()->success){
-      RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"set_camera_info service called successfully");
-    }else{
-      RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),"Failed to call service set_camera_info");
-    } 
 
+    // We give the async_send_request() method a callback that will get executed once the response
+    // is received.
+    // This way we can return immediately from this method and allow other work to be done by the
+    // executor in `spin` while waiting for the response.
+
+    using ServiceResponseFuture =
+      rclcpp::Client<sensor_msgs::srv::SetCameraInfo>::SharedFuture;
+    auto response_received_callback = [this](ServiceResponseFuture future) {
+        auto result = future.get();
+        if(result->success){
+          RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"set_camera_info service called successfully");
+        }else{
+          RCLCPP_ERROR(rclcpp::get_logger("rclcpp"),"Failed to call service set_camera_info");
+        } 
+        rclcpp::shutdown();
+      };
+        
+    auto future_result = set_camera_info_bis_service_->async_send_request(request, response_received_callback);
     return true;
   }
 } // namespace visp_camera_calibration
