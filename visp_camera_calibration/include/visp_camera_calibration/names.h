@@ -32,13 +32,13 @@
  * not clear to you.
  *
  * Description:
- * File containing names of topics or services used all accross the package
+ * File containing names of topics or services used all across the package
  *
  *****************************************************************************/
 
 /*!
   \file names.h
-  \brief File containing names of topics or services used all accross the package
+  \brief File containing names of topics or services used all across the package
 */
 
 #ifndef VISP_CAMERA_CALIBRATION__NAMES_H_
