@@ -137,7 +137,7 @@ bool Calibrator::calibrateCallback(const std::shared_ptr<rmw_request_id_t> /*req
   using ServiceResponseFuture = rclcpp::Client<sensor_msgs::srv::SetCameraInfo>::SharedFuture;
   auto response_received_callback = [this](ServiceResponseFuture future) {
     auto result = future.get();
-    if (result->success) {
+    if (result) {
       RCLCPP_INFO(rclcpp::get_logger("rclcpp"), "set_camera_info service called successfully");
     } else {
       RCLCPP_ERROR(rclcpp::get_logger("rclcpp"), "Failed to call service set_camera_info");
