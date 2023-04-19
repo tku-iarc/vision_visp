@@ -8,7 +8,6 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   image_proc
   image_transport
-  message_generation
   nodelet
   resource_retriever
   roscpp
@@ -60,7 +59,6 @@ catkin_package(
   CATKIN_DEPENDS
     dynamic_reconfigure
     geometry_msgs
-    message_runtime
     nodelet
     roscpp
     sensor_msgs
@@ -113,7 +111,6 @@ target_link_libraries(${PROJECT_NAME}
   ${geometry_msgs_LIBRARIES}
   ${image_proc_LIBRARIES}
   ${image_transport_LIBRARIES}
-  ${message_generation_LIBRARIES}
   ${nodelet_LIBRARIES}
   ${resource_retriever_LIBRARIES}
   ${roscpp_LIBRARIES}
